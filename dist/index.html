@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0b0c">
+  <meta name="description" content="flowdi.dev entwickelt WoW-Addons und Discord-Bots, die Gildenmanagement an einem Ort zusammenführen.">
+  <title>flowdi.dev — Tools für WoW-Gilden</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0b0c'/%3E%3Cpath d='M17 15h32v9H27v8h18v9H27v17H17z' fill='%23ff6b2c'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0a0b0c;
+      --bg-soft: #0e1012;
+      --panel: #111419;
+      --panel-2: #15191f;
+      --line: #272c33;
+      --line-soft: rgba(255,255,255,.075);
+      --text: #f3f1ed;
+      --muted: #92979f;
+      --accent: #ff6b2c;
+      --accent-soft: rgba(255,107,44,.13);
+      --blue: #5d8dff;
+      --green: #68d391;
+      --max: 1180px;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--line-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, #000 0, rgba(0,0,0,.84) 52%, transparent 100%);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      width: 38rem;
+      height: 38rem;
+      right: -20rem;
+      top: 4rem;
+      z-index: -1;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(255,107,44,.10), transparent 67%);
+    }
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    ::selection { color: #0a0b0c; background: var(--accent); }
+
+    .skip-link {
+      position: fixed;
+      left: 1rem;
+      top: -5rem;
+      z-index: 100;
+      padding: .7rem 1rem;
+      color: #0a0b0c;
+      background: var(--accent);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(10,11,12,.88);
+      backdrop-filter: blur(16px);
+    }
+    .nav {
+      max-width: var(--max);
+      min-height: 74px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      text-decoration: none;
+      font-size: 1.08rem;
+    }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      color: #090a0b;
+      background: var(--accent);
+      font-size: .83rem;
+      letter-spacing: -.06em;
+    }
+    .brand-dot { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a {
+      color: #b8bbc0;
+      font-family: var(--mono);
+      font-size: .76rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color .2s ease;
+    }
+    .nav-links a:hover, .nav-links a:focus-visible, .nav-links a.active { color: var(--accent); }
+
+    main, footer { overflow: hidden; }
+    .section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 112px 24px;
+    }
+    .hero {
+      min-height: calc(100svh - 74px);
+      padding-top: clamp(72px, 10vw, 130px);
+      padding-bottom: 70px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(340px, .88fr);
+      align-items: center;
+      gap: clamp(3rem, 7vw, 7rem);
+    }
+    .eyebrow, .section-kicker {
+      margin: 0 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      color: #a6abb2;
+      font-family: var(--mono);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before, .section-kicker::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(255,107,44,.75);
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 770px;
+      margin-bottom: 1.8rem;
+      font-size: clamp(3.3rem, 7.3vw, 7.1rem);
+      line-height: .94;
+      letter-spacing: -.072em;
+      font-weight: 900;
+    }
+    h1 span { display: block; color: var(--accent); }
+    .hero-copy {
+      max-width: 680px;
+      margin-bottom: 2.1rem;
+      color: #a8acb2;
+      font-size: clamp(1rem, 1.45vw, 1.2rem);
+      line-height: 1.75;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .button {
+      min-height: 48px;
+      padding: 0 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #0a0b0c;
+      font-family: var(--mono);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: transform .2s ease, background .2s ease, color .2s ease;
+    }
+    .button:hover, .button:focus-visible { transform: translateY(-2px); background: #ff7e46; }
+    .button.secondary { color: #d8d9dc; background: transparent; border-color: #373c43; }
+    .button.secondary:hover, .button.secondary:focus-visible { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+
+    .system-card {
+      position: relative;
+      border: 1px solid #31363d;
+      background: rgba(17,20,25,.9);
+      box-shadow: 24px 24px 0 rgba(255,107,44,.035);
+    }
+    .system-card::before {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 1px;
+      right: -55px;
+      top: 22%;
+      background: var(--accent);
+      opacity: .65;
+    }
+    .window-bar {
+      min-height: 48px;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      color: #848a92;
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .05em;
+    }
+    .window-dots { display: flex; gap: 6px; }
+    .window-dots i { width: 7px; height: 7px; border: 1px solid #626770; border-radius: 50%; }
+    .window-dots i:first-child { border-color: var(--accent); background: var(--accent); }
+    .system-body { padding: 1.3rem; }
+    .flow-node {
+      position: relative;
+      padding: 1rem 1rem 1rem 3.2rem;
+      border: 1px solid #292e35;
+      background: #0d0f12;
+      margin-bottom: .75rem;
+    }
+    .flow-node:last-child { margin-bottom: 0; }
+    .flow-node:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      width: 1px;
+      height: .8rem;
+      left: 1.45rem;
+      bottom: -.8rem;
+      background: #454b55;
+    }
+    .node-index {
+      position: absolute;
+      left: .8rem;
+      top: .8rem;
+      width: 1.3rem;
+      height: 1.3rem;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      border: 1px solid rgba(255,107,44,.5);
+      font: 700 .65rem var(--mono);
+    }
+    .flow-node strong { display: block; margin-bottom: .16rem; font-size: .92rem; }
+    .flow-node small { display: block; color: #7e848c; font-family: var(--mono); font-size: .69rem; }
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      margin-top: 1rem;
+      color: #a7acb2;
+      font: 700 .69rem var(--mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(104,211,145,.5); animation: pulse 2.4s infinite; }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(104,211,145,0); } 100% { box-shadow: 0 0 0 0 rgba(104,211,145,0); } }
+
+    .divider { border-top: 1px solid var(--line); }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, .65fr);
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 3.4rem;
+    }
+    .section-number { color: var(--accent); }
+    h2 {
+      margin-bottom: 0;
+      font-size: clamp(2.6rem, 5vw, 5.2rem);
+      line-height: 1.02;
+      letter-spacing: -.06em;
+      font-weight: 900;
+    }
+    .section-intro { margin-bottom: .4rem; color: #9ca1a8; font-size: 1.05rem; }
+
+    .manifesto-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .manifesto-main, .manifesto-list { background: var(--bg-soft); }
+    .manifesto-main { padding: clamp(2rem, 5vw, 4.3rem); }
+    .manifesto-main blockquote { margin: 0; font-size: clamp(1.65rem, 3vw, 3.1rem); line-height: 1.2; letter-spacing: -.035em; font-weight: 720; }
+    .manifesto-main em { color: var(--accent); font-style: normal; }
+    .manifesto-list { display: grid; }
+    .principle { padding: 1.7rem 1.8rem; border-bottom: 1px solid var(--line); }
+    .principle:last-child { border-bottom: 0; }
+    .principle small { display: block; margin-bottom: .35rem; color: var(--accent); font: 700 .68rem var(--mono); letter-spacing: .1em; }
+    .principle strong { display: block; font-size: 1rem; }
+
+    .projects { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+    .project {
+      position: relative;
+      grid-column: span 6;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #2d3239;
+      background: linear-gradient(150deg, rgba(23,27,32,.96), rgba(13,15,18,.97));
+      overflow: hidden;
+      transition: border-color .25s ease, transform .25s ease;
+    }
+    .project:hover { transform: translateY(-4px); border-color: rgba(255,107,44,.62); }
+    .project.featured { grid-column: span 8; }
+    .project.compact { grid-column: span 4; }
+    .project::after {
+      content: attr(data-code);
+      position: absolute;
+      right: 1rem;
+      bottom: -1.2rem;
+      color: rgba(255,255,255,.025);
+      font-size: 6.8rem;
+      line-height: 1;
+      font-weight: 900;
+      pointer-events: none;
+    }
+    .project-top { padding: 1.15rem 1.3rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--line); }
+    .project-index { color: #767c84; font: 700 .74rem var(--mono); letter-spacing: .08em; }
+    .status { display: inline-flex; align-items: center; gap: .5rem; color: #aeb2b7; font: 700 .65rem var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .status::before { content: ""; width: 6px; height: 6px; background: var(--accent); }
+    .status.live::before { background: var(--green); }
+    .status.blue::before { background: var(--blue); }
+    .project-body { position: relative; z-index: 1; padding: clamp(1.5rem, 3vw, 2.4rem); display: flex; flex: 1; flex-direction: column; }
+    .project-label { margin-bottom: .8rem; color: var(--accent); font: 700 .7rem var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+    .project h3 { margin-bottom: 1rem; font-size: clamp(1.7rem, 3vw, 2.8rem); line-height: 1.05; letter-spacing: -.045em; }
+    .project p { max-width: 570px; color: #9ca1a8; }
+    .tags { margin-top: auto; padding-top: 1.5rem; display: flex; flex-wrap: wrap; gap: .45rem; }
+    .tag { padding: .34rem .55rem; border: 1px solid #333941; color: #9fa4aa; background: rgba(10,11,12,.44); font: 600 .66rem var(--mono); }
+    .project-toggle { align-self: flex-start; margin-top: 1.25rem; padding: 0 0 .2rem; border: 0; border-bottom: 1px solid #5f646b; color: #e3e2df; background: transparent; cursor: pointer; font: 700 .72rem var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+    .project-toggle:hover, .project-toggle:focus-visible { color: var(--accent); border-color: var(--accent); }
+    .project-details { display: none; padding-top: 1.2rem; color: #aaaeb4; }
+    .project.open .project-details { display: block; }
+    .project-details ul { margin: 0; padding-left: 1.15rem; }
+    .project-details li { margin-bottom: .4rem; }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+    .architecture-copy, .architecture-map { background: var(--bg-soft); }
+    .architecture-copy { padding: clamp(2rem, 5vw, 4rem); }
+    .architecture-copy h3 { margin-bottom: 1.2rem; font-size: clamp(2rem, 3.6vw, 3.3rem); line-height: 1.05; letter-spacing: -.045em; }
+    .architecture-copy p { color: #9ca1a8; }
+    .architecture-map { padding: clamp(1.4rem, 3vw, 2.4rem); display: grid; gap: .7rem; }
+    .map-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .7rem; }
+    .map-box { min-height: 76px; padding: 1rem; display: flex; flex-direction: column; justify-content: center; border: 1px solid #30363e; background: #101318; }
+    .map-box strong { font-size: .92rem; }
+    .map-box small { color: #7e848c; font: .67rem var(--mono); }
+    .map-line { width: 38px; height: 1px; background: var(--accent); opacity: .7; }
+    .map-center { grid-column: 1 / -1; margin: .2rem auto; width: min(100%, 310px); text-align: center; border-color: rgba(255,107,44,.65); box-shadow: inset 3px 0 var(--accent); }
+
+    .roadmap { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+    .roadmap-item { min-height: 220px; padding: 1.6rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(14,16,18,.78); }
+    .roadmap-item small { color: var(--accent); font: 700 .67rem var(--mono); letter-spacing: .1em; }
+    .roadmap-item h3 { margin: 2rem 0 .7rem; font-size: 1.15rem; }
+    .roadmap-item p { color: #858b92; font-size: .92rem; }
+
+    .closing { padding-bottom: 130px; text-align: center; }
+    .closing .section-kicker { justify-content: center; }
+    .closing h2 { max-width: 900px; margin: 0 auto 1.6rem; }
+    .closing p { max-width: 670px; margin: 0 auto; color: #979ca4; font-size: 1.05rem; }
+
+    footer { border-top: 1px solid var(--line); }
+    .footer-inner { max-width: var(--max); min-height: 110px; margin: 0 auto; padding: 1.7rem 24px; display: flex; align-items: center; justify-content: space-between; gap: 2rem; color: #737980; font: .72rem var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+    .footer-inner a { color: #b3b6ba; text-decoration: none; }
+    .footer-inner a:hover { color: var(--accent); }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    @media (max-width: 900px) {
+      .nav-links { gap: 1rem; }
+      .nav-links a:nth-child(2) { display: none; }
+      .hero, .section-head, .manifesto-grid, .architecture { grid-template-columns: 1fr; }
+      .hero { min-height: auto; }
+      .system-card { max-width: 620px; }
+      .system-card::before { display: none; }
+      .section-head { gap: 1.4rem; }
+      .project.featured, .project.compact, .project { grid-column: span 12; min-height: 330px; }
+      .roadmap { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      .nav { min-height: 64px; padding: 0 18px; }
+      .nav-links a:not(:last-child) { display: none; }
+      .section { padding: 82px 18px; }
+      .hero { padding-top: 64px; padding-bottom: 78px; }
+      h1 { font-size: clamp(3rem, 16vw, 4.4rem); }
+      .hero-actions, .button { width: 100%; }
+      .system-body { padding: .85rem; }
+      .flow-node { padding-right: .75rem; }
+      .project { min-height: 0; }
+      .roadmap { grid-template-columns: 1fr; }
+      .map-row { grid-template-columns: 1fr; }
+      .map-line { width: 1px; height: 24px; margin: 0 auto; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Zum Inhalt</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a class="brand" href="#home" aria-label="flowdi.dev Startseite"><span class="brand-mark">F.</span><span>flowdi<span class="brand-dot">.</span>dev</span></a>
+      <div class="nav-links">
+        <a href="#idee">Idee</a>
+        <a href="#projekte">Projekte</a>
+        <a href="#system">System</a>
+        <a href="#ausblick">Ausblick</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="section hero" id="home">
+      <div>
+        <p class="eyebrow">Entwickelt für WoW-Gilden · im echten Einsatz</p>
+        <h1>Werkzeuge für Gilden.<span>Ohne Tool-Zirkus.</span></h1>
+        <p class="hero-copy">Auf flowdi.dev entstehen Addons und Discord-Bots, die Gildenmanagement einfacher machen: Recruitment, Roster, Gildenbank, Sprachkanäle und Interface-Werkzeuge – verbunden gedacht, statt auf viele einzelne Anbieter und Premium-Pakete verteilt.</p>
+        <div class="hero-actions">
+          <a class="button" href="#projekte">Projekte ansehen</a>
+          <a class="button secondary" href="#idee">Die Idee dahinter</a>
+        </div>
+      </div>
+
+      <aside class="system-card reveal" aria-label="Übersicht des Guild-Tools-Systems">
+        <div class="window-bar"><span>guild-stack.config</span><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="system-body">
+          <div class="flow-node"><span class="node-index">01</span><strong>Discord Guild Helper</strong><small>recruitment · roster · voice</small></div>
+          <div class="flow-node"><span class="node-index">02</span><strong>Gildenbank Pipeline</strong><small>addon · dashboard · sheets</small></div>
+          <div class="flow-node"><span class="node-index">03</span><strong>FlowdiUI</strong><small>interface · panels · layer tools</small></div>
+          <div class="system-status"><span class="pulse" aria-hidden="true"></span> modular aufgebaut · gemeinsam gedacht</div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="divider">
+      <section class="section" id="idee">
+        <div class="section-head reveal">
+          <div>
+            <p class="section-kicker"><span class="section-number">01 /</span> Leitgedanke</p>
+            <h2>Weniger Dienste.<br>Mehr Zusammenhang.</h2>
+          </div>
+          <p class="section-intro">Gilden brauchen keine Sammlung isolierter Premium-Werkzeuge. Sie brauchen Funktionen, die miteinander sprechen und sich an den tatsächlichen Alltag anpassen.</p>
+        </div>
+        <div class="manifesto-grid reveal">
+          <div class="manifesto-main"><blockquote>Ein System für die Dinge, die Offiziere jeden Tag erledigen – <em>klar, erweiterbar und ohne unnötige Abhängigkeiten.</em></blockquote></div>
+          <div class="manifesto-list">
+            <div class="principle"><small>01 / VERBUNDEN</small><strong>Discord, Spiel und Gildendaten greifen ineinander.</strong></div>
+            <div class="principle"><small>02 / MODULAR</small><strong>Jede Gilde aktiviert nur, was sie wirklich braucht.</strong></div>
+            <div class="principle"><small>03 / PRAXISNAH</small><strong>Features entstehen aus dem echten Gildenbetrieb.</strong></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="divider">
+      <section class="section" id="projekte">
+        <div class="section-head reveal">
+          <div>
+            <p class="section-kicker"><span class="section-number">02 /</span> Aktuelle Projekte</p>
+            <h2>Was gerade entsteht.</h2>
+          </div>
+          <p class="section-intro">Die Projekte wachsen iterativ: erst ein konkretes Problem lösen, dann stabilisieren, verbinden und Schritt für Schritt erweitern.</p>
+        </div>
+
+        <div class="projects">
+          <article class="project featured reveal" data-code="BOT">
+            <div class="project-top"><span class="project-index">PROJECT / 01</span><span class="status live">Im Einsatz</span></div>
+            <div class="project-body">
+              <span class="project-label">Discord · Gildenmanagement</span>
+              <h3>Guild Helper</h3>
+              <p>Der zentrale Discord-Bot für wiederkehrende Aufgaben: Recruitment-Tickets, Mitgliederprofile, Gildendaten, Abwesenheiten und temporäre Sprachkanäle werden in einer gemeinsamen Basis verwaltet.</p>
+              <button class="project-toggle" type="button" aria-expanded="false">Details öffnen</button>
+              <div class="project-details">
+                <ul>
+                  <li>Recruitment mit Armory- und Warcraft-Logs-Prüfung</li>
+                  <li>Roster- und Attendance-Anbindung an Google Sheets</li>
+                  <li>Join-to-Create-Sprachkanäle mit persönlichen Einstellungen</li>
+                  <li>Eigenständiges Web-Dashboard, ohne Bot-Neustart bei Designänderungen</li>
+                </ul>
+              </div>
+              <div class="tags"><span class="tag">Discord</span><span class="tag">TypeScript</span><span class="tag">Google Sheets</span><span class="tag">Dashboard</span></div>
+            </div>
+          </article>
+
+          <article class="project compact reveal" data-code="UI">
+            <div class="project-top"><span class="project-index">PROJECT / 02</span><span class="status blue">In Entwicklung</span></div>
+            <div class="project-body">
+              <span class="project-label">WoW Forever · Interface</span>
+              <h3>FlowdiUI</h3>
+              <p>Ein modulares Interface, das Funktionen großer UI-Addons in einer konsistenten Oberfläche bündelt.</p>
+              <button class="project-toggle" type="button" aria-expanded="false">Details öffnen</button>
+              <div class="project-details"><ul><li>Action Bars, Unit Frames und Nameplates</li><li>Darkmode, Bags, Quick Loot und Questie-Anbindung</li><li>Globale Schriften, Farben, Texturen und Unlock-Modus</li></ul></div>
+              <div class="tags"><span class="tag">Lua</span><span class="tag">WoW API</span><span class="tag">Modular UI</span></div>
+            </div>
+          </article>
+
+          <article class="project reveal" data-code="GBM">
+            <div class="project-top"><span class="project-index">PROJECT / 03</span><span class="status">Aktiver Ausbau</span></div>
+            <div class="project-body">
+              <span class="project-label">Addon · Bot · Datenfluss</span>
+              <h3>Gildenbank</h3>
+              <p>Ein durchgängiger Workflow für Entnahmen und Verwaltung: Das Ingame-Addon sammelt Vorgänge, Exporte landen kontrolliert im Sheet und der Discord-Bot stellt die Daten für Offiziere im Dashboard bereit.</p>
+              <button class="project-toggle" type="button" aria-expanded="false">Details öffnen</button>
+              <div class="project-details"><ul><li>Sichere Erfassung und bestätigter Export im Spiel</li><li>Sheet-Import mit eindeutigen Vorgangs-IDs</li><li>Dashboard-Verwaltung innerhalb des bestehenden Guild Helpers</li></ul></div>
+              <div class="tags"><span class="tag">WoW Addon</span><span class="tag">Discord Bot</span><span class="tag">Sheets</span><span class="tag">Auditierbar</span></div>
+            </div>
+          </article>
+
+          <article class="project reveal" data-code="KIT">
+            <div class="project-top"><span class="project-index">PROJECT / 04</span><span class="status live">Standalone</span></div>
+            <div class="project-body">
+              <span class="project-label">WoW Forever · Kleine Werkzeuge</span>
+              <h3>FlowdiUI Tools</h3>
+              <p>Einzelne Bausteine sind schon vor dem vollständigen Interface nutzbar: frei platzierbare Data Panels und ein schlanker Layer Tracker im gemeinsamen FlowdiUI-Stil.</p>
+              <button class="project-toggle" type="button" aria-expanded="false">Details öffnen</button>
+              <div class="project-details"><ul><li>Data Panels mit bis zu zwölf frei belegbaren Slots</li><li>Darkmode-Menü und zentraler Unlock-Modus</li><li>Layer-Anzeige inklusive aktiver Layer für WoW Forever</li></ul></div>
+              <div class="tags"><span class="tag">Data Panels 1.0.7</span><span class="tag">Layer Tracker 1.0.0</span><span class="tag">Standalone</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <div class="divider">
+      <section class="section" id="system">
+        <div class="section-head reveal">
+          <div>
+            <p class="section-kicker"><span class="section-number">03 /</span> Gemeinsames System</p>
+            <h2>Nicht nur einzelne Features.</h2>
+          </div>
+          <p class="section-intro">Der eigentliche Vorteil entsteht dort, wo sich die Bausteine ergänzen: Daten müssen nur einmal gepflegt werden und bleiben für die richtigen Werkzeuge verfügbar.</p>
+        </div>
+        <div class="architecture reveal">
+          <div class="architecture-copy">
+            <h3>Eine Basis.<br>Mehrere Oberflächen.</h3>
+            <p>Discord übernimmt Kommunikation und Automatisierung. Das Dashboard gibt Offizieren Kontrolle. Addons bringen die passenden Werkzeuge direkt ins Spiel. Gemeinsame Datenflüsse halten alles zusammen.</p>
+          </div>
+          <div class="architecture-map" aria-label="Darstellung der Systemarchitektur">
+            <div class="map-row"><div class="map-box"><strong>WoW Addons</strong><small>IN-GAME WORKFLOWS</small></div><span class="map-line" aria-hidden="true"></span><div class="map-box"><strong>Discord Bot</strong><small>AUTOMATION & KOMMUNIKATION</small></div></div>
+            <div class="map-box map-center"><strong>Guild Data Layer</strong><small>PROFILE · ROSTER · BANK · SETTINGS</small></div>
+            <div class="map-row"><div class="map-box"><strong>Web Dashboard</strong><small>STEUERUNG FÜR OFFIZIERE</small></div><span class="map-line" aria-hidden="true"></span><div class="map-box"><strong>Google Sheets</strong><small>ROSTER & AUSWERTUNG</small></div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="divider">
+      <section class="section" id="ausblick">
+        <div class="section-head reveal">
+          <div>
+            <p class="section-kicker"><span class="section-number">04 /</span> Entwicklungsrichtung</p>
+            <h2>Schritt für Schritt zusammenführen.</h2>
+          </div>
+          <p class="section-intro">Nicht jedes Modul ist schon fertig. Die Richtung ist aber klar: ein verlässlicher Werkzeugkasten, der mit einer Gilde mitwachsen kann.</p>
+        </div>
+        <div class="roadmap reveal">
+          <article class="roadmap-item"><small>JETZT</small><h3>Stabiler Gildenbetrieb</h3><p>Bot, Dashboard, Recruitment, Bank und Voice-Funktionen zuverlässig im Alltag halten.</p></article>
+          <article class="roadmap-item"><small>ALS NÄCHSTES</small><h3>Roster vertiefen</h3><p>Profile, Raid Attendance und Rollenwechsel weiter automatisieren und vereinheitlichen.</p></article>
+          <article class="roadmap-item"><small>PARALLEL</small><h3>FlowdiUI ausbauen</h3><p>Das Interface modular fertigstellen und ausgewählte Funktionen separat verfügbar machen.</p></article>
+          <article class="roadmap-item"><small>LANGFRISTIG</small><h3>Eine Plattform</h3><p>Mehr Gildenfunktionen unter einer Oberfläche zusammenbringen, ohne unnötigen Anbieter-Mix.</p></article>
+        </div>
+      </section>
+    </div>
+
+    <div class="divider">
+      <section class="section closing reveal">
+        <p class="section-kicker">flowdi.dev</p>
+        <h2>Gebaut für Gilden, die lieber spielen als Tools verwalten.</h2>
+        <p>Diese Seite dokumentiert die Entwicklung offen – von den bereits eingesetzten Funktionen bis zu den nächsten Bausteinen des gemeinsamen Systems.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner"><span>© <span id="year"></span> flowdi.dev · Guild tools in development</span><a href="#home">Nach oben</a></div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.querySelectorAll('.project-toggle').forEach((button) => {
+      button.addEventListener('click', () => {
+        const card = button.closest('.project');
+        const open = card.classList.toggle('open');
+        button.setAttribute('aria-expanded', String(open));
+        button.textContent = open ? 'Details schließen' : 'Details öffnen';
+      });
+    });
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealItems = document.querySelectorAll('.reveal');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => item.classList.add('visible'));
+    } else {
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: .12 });
+      revealItems.forEach((item) => revealObserver.observe(item));
+    }
+
+    const sectionLinks = [...document.querySelectorAll('.nav-links a')];
+    const observedSections = sectionLinks.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+    if ('IntersectionObserver' in window) {
+      const navObserver = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        sectionLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === '#' + visible.target.id));
+      }, { rootMargin: '-25% 0px -60% 0px', threshold: [0, .1, .5] });
+      observedSections.forEach((section) => navObserver.observe(section));
+    }
+  </script>
+</body>
+</html>
