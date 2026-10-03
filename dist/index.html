@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0b0c">
-  <meta name="description" content="flowdi.dev entwickelt WoW-Addons und Discord-Bots, die Gildenmanagement an einem Ort zusammenführen.">
-  <title>flowdi.dev — Tools für WoW-Gilden</title>
+  <meta name="description" content="flowdi.dev builds WoW addons and Discord bots that bring guild management together in one connected toolkit.">
+  <title>flowdi.dev — Tools for WoW Guilds</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0b0c'/%3E%3Cpath d='M17 15h32v9H27v8h18v9H27v17H17z' fill='%23ff6b2c'/%3E%3C/svg%3E">
   <style>
     :root {
@@ -127,6 +127,29 @@
       transition: color .2s ease;
     }
     .nav-links a:hover, .nav-links a:focus-visible, .nav-links a.active { color: var(--accent); }
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: .38rem;
+      margin-left: .35rem;
+      padding-left: 1.15rem;
+      border-left: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+    .lang-switch button {
+      padding: .3rem .18rem;
+      border: 0;
+      color: #6f747b;
+      background: transparent;
+      cursor: pointer;
+      font: inherit;
+      transition: color .2s ease;
+    }
+    .lang-switch button:hover, .lang-switch button:focus-visible, .lang-switch button.active { color: var(--text); }
+    .lang-divider { color: #454a51; }
 
     main, footer { overflow: hidden; }
     .section {
@@ -404,6 +427,7 @@
     @media (max-width: 620px) {
       .nav { min-height: 64px; padding: 0 18px; }
       .nav-links a:not(:last-child) { display: none; }
+      .lang-switch { margin-left: 0; padding-left: .65rem; }
       .section { padding: 82px 18px; }
       .hero { padding-top: 64px; padding-bottom: 78px; }
       h1 { font-size: clamp(3rem, 16vw, 4.4rem); }
@@ -424,15 +448,20 @@
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Zum Inhalt</a>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
   <header class="site-header">
-    <nav class="nav" aria-label="Hauptnavigation">
-      <a class="brand" href="#home" aria-label="flowdi.dev Startseite"><span class="brand-mark">F.</span><span>flowdi<span class="brand-dot">.</span>dev</span></a>
+    <nav class="nav" aria-label="Main navigation" data-i18n-aria="navAria">
+      <a class="brand" href="#home" aria-label="flowdi.dev home"><span class="brand-mark">F.</span><span>flowdi<span class="brand-dot">.</span>dev</span></a>
       <div class="nav-links">
-        <a href="#idee">Idee</a>
-        <a href="#projekte">Projekte</a>
+        <a href="#idee" data-i18n="navIdea">Vision</a>
+        <a href="#projekte" data-i18n="navProjects">Projects</a>
         <a href="#system">System</a>
-        <a href="#ausblick">Ausblick</a>
+        <a href="#ausblick" data-i18n="navRoadmap">Roadmap</a>
+        <div class="lang-switch" aria-label="Language selection" data-i18n-aria="langAria">
+          <button type="button" data-lang="de" aria-label="Auf Deutsch wechseln">DE</button>
+          <span class="lang-divider" aria-hidden="true">/</span>
+          <button type="button" data-lang="en" class="active" aria-label="Switch to English">EN</button>
+        </div>
       </div>
     </nav>
   </header>
@@ -440,12 +469,12 @@
   <main id="main">
     <section class="section hero" id="home">
       <div>
-        <p class="eyebrow">Entwickelt für WoW-Gilden · im echten Einsatz</p>
-        <h1>Werkzeuge für Gilden.<span>Ohne Tool-Zirkus.</span></h1>
-        <p class="hero-copy">Auf flowdi.dev entstehen Addons und Discord-Bots, die Gildenmanagement einfacher machen: Recruitment, Roster, Gildenbank, Sprachkanäle und Interface-Werkzeuge – verbunden gedacht, statt auf viele einzelne Anbieter und Premium-Pakete verteilt.</p>
+        <p class="eyebrow" data-i18n="heroEyebrow">Built for WoW guilds · proven in real use</p>
+        <h1 data-i18n-html="heroTitle">Tools for guilds.<span>Without the tool sprawl.</span></h1>
+        <p class="hero-copy" data-i18n="heroCopy">flowdi.dev builds addons and Discord bots that simplify guild management: recruitment, rosters, guild banks, voice channels and interface tools — designed to work together instead of being scattered across separate providers and premium plans.</p>
         <div class="hero-actions">
-          <a class="button" href="#projekte">Projekte ansehen</a>
-          <a class="button secondary" href="#idee">Die Idee dahinter</a>
+          <a class="button" href="#projekte" data-i18n="viewProjects">View projects</a>
+          <a class="button secondary" href="#idee" data-i18n="viewIdea">The idea behind it</a>
         </div>
       </div>
 
@@ -453,9 +482,9 @@
         <div class="window-bar"><span>guild-stack.config</span><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="system-body">
           <div class="flow-node"><span class="node-index">01</span><strong>Discord Guild Helper</strong><small>recruitment · roster · voice</small></div>
-          <div class="flow-node"><span class="node-index">02</span><strong>Gildenbank Pipeline</strong><small>addon · dashboard · sheets</small></div>
+          <div class="flow-node"><span class="node-index">02</span><strong data-i18n="bankPipeline">Guild Bank Pipeline</strong><small>addon · dashboard · sheets</small></div>
           <div class="flow-node"><span class="node-index">03</span><strong>FlowdiUI</strong><small>interface · panels · layer tools</small></div>
-          <div class="system-status"><span class="pulse" aria-hidden="true"></span> modular aufgebaut · gemeinsam gedacht</div>
+          <div class="system-status"><span class="pulse" aria-hidden="true"></span><span data-i18n="systemStatus">modular by design · built to connect</span></div>
         </div>
       </aside>
     </section>
@@ -464,17 +493,17 @@
       <section class="section" id="idee">
         <div class="section-head reveal">
           <div>
-            <p class="section-kicker"><span class="section-number">01 /</span> Leitgedanke</p>
-            <h2>Weniger Dienste.<br>Mehr Zusammenhang.</h2>
+            <p class="section-kicker"><span class="section-number">01 /</span><span data-i18n="ideaKicker">Core idea</span></p>
+            <h2 data-i18n-html="ideaTitle">Fewer services.<br>More connection.</h2>
           </div>
-          <p class="section-intro">Gilden brauchen keine Sammlung isolierter Premium-Werkzeuge. Sie brauchen Funktionen, die miteinander sprechen und sich an den tatsächlichen Alltag anpassen.</p>
+          <p class="section-intro" data-i18n="ideaIntro">Guilds do not need a collection of isolated premium tools. They need features that communicate with each other and adapt to the way a guild actually operates.</p>
         </div>
         <div class="manifesto-grid reveal">
-          <div class="manifesto-main"><blockquote>Ein System für die Dinge, die Offiziere jeden Tag erledigen – <em>klar, erweiterbar und ohne unnötige Abhängigkeiten.</em></blockquote></div>
+          <div class="manifesto-main"><blockquote data-i18n-html="manifesto">One system for the work officers handle every day — <em>clear, extensible and free from unnecessary dependencies.</em></blockquote></div>
           <div class="manifesto-list">
-            <div class="principle"><small>01 / VERBUNDEN</small><strong>Discord, Spiel und Gildendaten greifen ineinander.</strong></div>
-            <div class="principle"><small>02 / MODULAR</small><strong>Jede Gilde aktiviert nur, was sie wirklich braucht.</strong></div>
-            <div class="principle"><small>03 / PRAXISNAH</small><strong>Features entstehen aus dem echten Gildenbetrieb.</strong></div>
+            <div class="principle"><small data-i18n="principle1Label">01 / CONNECTED</small><strong data-i18n="principle1">Discord, the game and guild data work together.</strong></div>
+            <div class="principle"><small data-i18n="principle2Label">02 / MODULAR</small><strong data-i18n="principle2">Each guild enables only what it actually needs.</strong></div>
+            <div class="principle"><small data-i18n="principle3Label">03 / PRACTICAL</small><strong data-i18n="principle3">Features grow out of real guild operations.</strong></div>
           </div>
         </div>
       </section>
@@ -484,26 +513,26 @@
       <section class="section" id="projekte">
         <div class="section-head reveal">
           <div>
-            <p class="section-kicker"><span class="section-number">02 /</span> Aktuelle Projekte</p>
-            <h2>Was gerade entsteht.</h2>
+            <p class="section-kicker"><span class="section-number">02 /</span><span data-i18n="projectsKicker">Current projects</span></p>
+            <h2 data-i18n="projectsTitle">What is being built.</h2>
           </div>
-          <p class="section-intro">Die Projekte wachsen iterativ: erst ein konkretes Problem lösen, dann stabilisieren, verbinden und Schritt für Schritt erweitern.</p>
+          <p class="section-intro" data-i18n="projectsIntro">The projects grow iteratively: solve a concrete problem first, then stabilise, connect and expand it step by step.</p>
         </div>
 
         <div class="projects">
           <article class="project featured reveal" data-code="BOT">
-            <div class="project-top"><span class="project-index">PROJECT / 01</span><span class="status live">Im Einsatz</span></div>
+            <div class="project-top"><span class="project-index">PROJECT / 01</span><span class="status live" data-i18n="statusLive">In use</span></div>
             <div class="project-body">
-              <span class="project-label">Discord · Gildenmanagement</span>
+              <span class="project-label" data-i18n="botLabel">Discord · Guild management</span>
               <h3>Guild Helper</h3>
-              <p>Der zentrale Discord-Bot für wiederkehrende Aufgaben: Recruitment-Tickets, Mitgliederprofile, Gildendaten, Abwesenheiten und temporäre Sprachkanäle werden in einer gemeinsamen Basis verwaltet.</p>
-              <button class="project-toggle" type="button" aria-expanded="false">Details öffnen</button>
+              <p data-i18n="botCopy">The central Discord bot for recurring tasks: recruitment tickets, member profiles, guild data, absences and temporary voice channels are managed from one shared foundation.</p>
+              <button class="project-toggle" type="button" aria-expanded="false" data-i18n-toggle>Open details</button>
               <div class="project-details">
                 <ul>
-                  <li>Recruitment mit Armory- und Warcraft-Logs-Prüfung</li>
-                  <li>Roster- und Attendance-Anbindung an Google Sheets</li>
-                  <li>Join-to-Create-Sprachkanäle mit persönlichen Einstellungen</li>
-                  <li>Eigenständiges Web-Dashboard, ohne Bot-Neustart bei Designänderungen</li>
+                  <li data-i18n="botDetail1">Recruitment with Armory and Warcraft Logs checks</li>
+                  <li data-i18n="botDetail2">Roster and attendance integration with Google Sheets</li>
+                  <li data-i18n="botDetail3">Join-to-create voice channels with personal settings</li>
+                  <li data-i18n="botDetail4">Independent web dashboard without bot restarts for design updates</li>
                 </ul>
               </div>
               <div class="tags"><span class="tag">Discord</span><span class="tag">TypeScript</span><span class="tag">Google Sheets</span><span class="tag">Dashboard</span></div>
@@ -511,37 +540,37 @@
           </article>
 
           <article class="project compact reveal" data-code="UI">
-            <div class="project-top"><span class="project-index">PROJECT / 02</span><span class="status blue">In Entwicklung</span></div>
+            <div class="project-top"><span class="project-index">PROJECT / 02</span><span class="status blue" data-i18n="statusDevelopment">In development</span></div>
             <div class="project-body">
               <span class="project-label">WoW Forever · Interface</span>
               <h3>FlowdiUI</h3>
-              <p>Ein modulares Interface, das Funktionen großer UI-Addons in einer konsistenten Oberfläche bündelt.</p>
-              <button class="project-toggle" type="button" aria-expanded="false">Details öffnen</button>
-              <div class="project-details"><ul><li>Action Bars, Unit Frames und Nameplates</li><li>Darkmode, Bags, Quick Loot und Questie-Anbindung</li><li>Globale Schriften, Farben, Texturen und Unlock-Modus</li></ul></div>
+              <p data-i18n="uiCopy">A modular interface that combines features from major UI addons in one consistent experience.</p>
+              <button class="project-toggle" type="button" aria-expanded="false" data-i18n-toggle>Open details</button>
+              <div class="project-details"><ul><li data-i18n="uiDetail1">Action bars, unit frames and nameplates</li><li data-i18n="uiDetail2">Dark mode, bags, quick loot and Questie integration</li><li data-i18n="uiDetail3">Global fonts, colours, textures and unlock mode</li></ul></div>
               <div class="tags"><span class="tag">Lua</span><span class="tag">WoW API</span><span class="tag">Modular UI</span></div>
             </div>
           </article>
 
           <article class="project reveal" data-code="GBM">
-            <div class="project-top"><span class="project-index">PROJECT / 03</span><span class="status">Aktiver Ausbau</span></div>
+            <div class="project-top"><span class="project-index">PROJECT / 03</span><span class="status" data-i18n="statusActive">Active development</span></div>
             <div class="project-body">
-              <span class="project-label">Addon · Bot · Datenfluss</span>
-              <h3>Gildenbank</h3>
-              <p>Ein durchgängiger Workflow für Entnahmen und Verwaltung: Das Ingame-Addon sammelt Vorgänge, Exporte landen kontrolliert im Sheet und der Discord-Bot stellt die Daten für Offiziere im Dashboard bereit.</p>
-              <button class="project-toggle" type="button" aria-expanded="false">Details öffnen</button>
-              <div class="project-details"><ul><li>Sichere Erfassung und bestätigter Export im Spiel</li><li>Sheet-Import mit eindeutigen Vorgangs-IDs</li><li>Dashboard-Verwaltung innerhalb des bestehenden Guild Helpers</li></ul></div>
-              <div class="tags"><span class="tag">WoW Addon</span><span class="tag">Discord Bot</span><span class="tag">Sheets</span><span class="tag">Auditierbar</span></div>
+              <span class="project-label" data-i18n="bankLabel">Addon · Bot · Data flow</span>
+              <h3 data-i18n="bankTitle">Guild Bank</h3>
+              <p data-i18n="bankCopy">An end-to-end workflow for withdrawals and administration: the in-game addon records activity, exports move into the sheet in a controlled way, and the Discord bot makes the data available to officers in the dashboard.</p>
+              <button class="project-toggle" type="button" aria-expanded="false" data-i18n-toggle>Open details</button>
+              <div class="project-details"><ul><li data-i18n="bankDetail1">Safe in-game capture and confirmed export</li><li data-i18n="bankDetail2">Sheet import with unique transaction IDs</li><li data-i18n="bankDetail3">Dashboard management inside the existing Guild Helper</li></ul></div>
+              <div class="tags"><span class="tag">WoW Addon</span><span class="tag">Discord Bot</span><span class="tag">Sheets</span><span class="tag" data-i18n="auditable">Auditable</span></div>
             </div>
           </article>
 
           <article class="project reveal" data-code="KIT">
             <div class="project-top"><span class="project-index">PROJECT / 04</span><span class="status live">Standalone</span></div>
             <div class="project-body">
-              <span class="project-label">WoW Forever · Kleine Werkzeuge</span>
+              <span class="project-label" data-i18n="toolsLabel">WoW Forever · Focused tools</span>
               <h3>FlowdiUI Tools</h3>
-              <p>Einzelne Bausteine sind schon vor dem vollständigen Interface nutzbar: frei platzierbare Data Panels und ein schlanker Layer Tracker im gemeinsamen FlowdiUI-Stil.</p>
-              <button class="project-toggle" type="button" aria-expanded="false">Details öffnen</button>
-              <div class="project-details"><ul><li>Data Panels mit bis zu zwölf frei belegbaren Slots</li><li>Darkmode-Menü und zentraler Unlock-Modus</li><li>Layer-Anzeige inklusive aktiver Layer für WoW Forever</li></ul></div>
+              <p data-i18n="toolsCopy">Individual building blocks are already available before the full interface: freely placeable data panels and a lightweight layer tracker in the shared FlowdiUI style.</p>
+              <button class="project-toggle" type="button" aria-expanded="false" data-i18n-toggle>Open details</button>
+              <div class="project-details"><ul><li data-i18n="toolsDetail1">Data panels with up to twelve assignable slots</li><li data-i18n="toolsDetail2">Dark-mode menu and central unlock mode</li><li data-i18n="toolsDetail3">Current layer and active-layer count for WoW Forever</li></ul></div>
               <div class="tags"><span class="tag">Data Panels 1.0.7</span><span class="tag">Layer Tracker 1.0.0</span><span class="tag">Standalone</span></div>
             </div>
           </article>
@@ -553,20 +582,20 @@
       <section class="section" id="system">
         <div class="section-head reveal">
           <div>
-            <p class="section-kicker"><span class="section-number">03 /</span> Gemeinsames System</p>
-            <h2>Nicht nur einzelne Features.</h2>
+            <p class="section-kicker"><span class="section-number">03 /</span><span data-i18n="systemKicker">Connected system</span></p>
+            <h2 data-i18n="systemTitle">More than isolated features.</h2>
           </div>
-          <p class="section-intro">Der eigentliche Vorteil entsteht dort, wo sich die Bausteine ergänzen: Daten müssen nur einmal gepflegt werden und bleiben für die richtigen Werkzeuge verfügbar.</p>
+          <p class="section-intro" data-i18n="systemIntro">The real advantage appears when the building blocks complement one another: data is maintained once and remains available to the right tools.</p>
         </div>
         <div class="architecture reveal">
           <div class="architecture-copy">
-            <h3>Eine Basis.<br>Mehrere Oberflächen.</h3>
-            <p>Discord übernimmt Kommunikation und Automatisierung. Das Dashboard gibt Offizieren Kontrolle. Addons bringen die passenden Werkzeuge direkt ins Spiel. Gemeinsame Datenflüsse halten alles zusammen.</p>
+            <h3 data-i18n-html="architectureTitle">One foundation.<br>Multiple surfaces.</h3>
+            <p data-i18n="architectureCopy">Discord handles communication and automation. The dashboard gives officers control. Addons bring the right tools directly into the game. Shared data flows keep everything connected.</p>
           </div>
           <div class="architecture-map" aria-label="Darstellung der Systemarchitektur">
-            <div class="map-row"><div class="map-box"><strong>WoW Addons</strong><small>IN-GAME WORKFLOWS</small></div><span class="map-line" aria-hidden="true"></span><div class="map-box"><strong>Discord Bot</strong><small>AUTOMATION & KOMMUNIKATION</small></div></div>
+            <div class="map-row"><div class="map-box"><strong>WoW Addons</strong><small>IN-GAME WORKFLOWS</small></div><span class="map-line" aria-hidden="true"></span><div class="map-box"><strong>Discord Bot</strong><small data-i18n="mapAutomation">AUTOMATION & COMMUNICATION</small></div></div>
             <div class="map-box map-center"><strong>Guild Data Layer</strong><small>PROFILE · ROSTER · BANK · SETTINGS</small></div>
-            <div class="map-row"><div class="map-box"><strong>Web Dashboard</strong><small>STEUERUNG FÜR OFFIZIERE</small></div><span class="map-line" aria-hidden="true"></span><div class="map-box"><strong>Google Sheets</strong><small>ROSTER & AUSWERTUNG</small></div></div>
+            <div class="map-row"><div class="map-box"><strong>Web Dashboard</strong><small data-i18n="mapControl">CONTROL FOR OFFICERS</small></div><span class="map-line" aria-hidden="true"></span><div class="map-box"><strong>Google Sheets</strong><small data-i18n="mapSheets">ROSTER & REPORTING</small></div></div>
           </div>
         </div>
       </section>
@@ -576,16 +605,16 @@
       <section class="section" id="ausblick">
         <div class="section-head reveal">
           <div>
-            <p class="section-kicker"><span class="section-number">04 /</span> Entwicklungsrichtung</p>
-            <h2>Schritt für Schritt zusammenführen.</h2>
+            <p class="section-kicker"><span class="section-number">04 /</span><span data-i18n="roadmapKicker">Development direction</span></p>
+            <h2 data-i18n="roadmapTitle">Bringing it together, step by step.</h2>
           </div>
-          <p class="section-intro">Nicht jedes Modul ist schon fertig. Die Richtung ist aber klar: ein verlässlicher Werkzeugkasten, der mit einer Gilde mitwachsen kann.</p>
+          <p class="section-intro" data-i18n="roadmapIntro">Not every module is finished yet. The direction is clear: a dependable toolkit that can grow with a guild.</p>
         </div>
         <div class="roadmap reveal">
-          <article class="roadmap-item"><small>JETZT</small><h3>Stabiler Gildenbetrieb</h3><p>Bot, Dashboard, Recruitment, Bank und Voice-Funktionen zuverlässig im Alltag halten.</p></article>
-          <article class="roadmap-item"><small>ALS NÄCHSTES</small><h3>Roster vertiefen</h3><p>Profile, Raid Attendance und Rollenwechsel weiter automatisieren und vereinheitlichen.</p></article>
-          <article class="roadmap-item"><small>PARALLEL</small><h3>FlowdiUI ausbauen</h3><p>Das Interface modular fertigstellen und ausgewählte Funktionen separat verfügbar machen.</p></article>
-          <article class="roadmap-item"><small>LANGFRISTIG</small><h3>Eine Plattform</h3><p>Mehr Gildenfunktionen unter einer Oberfläche zusammenbringen, ohne unnötigen Anbieter-Mix.</p></article>
+          <article class="roadmap-item"><small data-i18n="now">NOW</small><h3 data-i18n="road1Title">Stable guild operations</h3><p data-i18n="road1Copy">Keep the bot, dashboard, recruitment, bank and voice features dependable in daily use.</p></article>
+          <article class="roadmap-item"><small data-i18n="next">NEXT</small><h3 data-i18n="road2Title">Deepen the roster</h3><p data-i18n="road2Copy">Continue automating and unifying profiles, raid attendance and role changes.</p></article>
+          <article class="roadmap-item"><small data-i18n="parallel">IN PARALLEL</small><h3 data-i18n="road3Title">Expand FlowdiUI</h3><p data-i18n="road3Copy">Complete the interface module by module and release selected features separately.</p></article>
+          <article class="roadmap-item"><small data-i18n="longTerm">LONG TERM</small><h3 data-i18n="road4Title">One platform</h3><p data-i18n="road4Copy">Bring more guild functions under one surface without an unnecessary mix of providers.</p></article>
         </div>
       </section>
     </div>
@@ -593,25 +622,88 @@
     <div class="divider">
       <section class="section closing reveal">
         <p class="section-kicker">flowdi.dev</p>
-        <h2>Gebaut für Gilden, die lieber spielen als Tools verwalten.</h2>
-        <p>Diese Seite dokumentiert die Entwicklung offen – von den bereits eingesetzten Funktionen bis zu den nächsten Bausteinen des gemeinsamen Systems.</p>
+        <h2 data-i18n="closingTitle">Built for guilds that would rather play than manage tools.</h2>
+        <p data-i18n="closingCopy">This site documents the development openly — from features already in use to the next building blocks of the connected system.</p>
       </section>
     </div>
   </main>
 
   <footer>
-    <div class="footer-inner"><span>© <span id="year"></span> flowdi.dev · Guild tools in development</span><a href="#home">Nach oben</a></div>
+    <div class="footer-inner"><span>© <span id="year"></span> flowdi.dev · Guild tools in development</span><a href="#home" data-i18n="backTop">Back to top</a></div>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    const translations = {
+      en: {
+        skip: 'Skip to content', navAria: 'Main navigation', langAria: 'Language selection', navIdea: 'Vision', navProjects: 'Projects', navRoadmap: 'Roadmap',
+        heroEyebrow: 'Built for WoW guilds · proven in real use', heroTitle: 'Tools for guilds.<span>Without the tool sprawl.</span>',
+        heroCopy: 'flowdi.dev builds addons and Discord bots that simplify guild management: recruitment, rosters, guild banks, voice channels and interface tools — designed to work together instead of being scattered across separate providers and premium plans.',
+        viewProjects: 'View projects', viewIdea: 'The idea behind it', bankPipeline: 'Guild Bank Pipeline', systemStatus: 'modular by design · built to connect',
+        ideaKicker: 'Core idea', ideaTitle: 'Fewer services.<br>More connection.', ideaIntro: 'Guilds do not need a collection of isolated premium tools. They need features that communicate with each other and adapt to the way a guild actually operates.',
+        manifesto: 'One system for the work officers handle every day — <em>clear, extensible and free from unnecessary dependencies.</em>',
+        principle1Label: '01 / CONNECTED', principle1: 'Discord, the game and guild data work together.', principle2Label: '02 / MODULAR', principle2: 'Each guild enables only what it actually needs.', principle3Label: '03 / PRACTICAL', principle3: 'Features grow out of real guild operations.',
+        projectsKicker: 'Current projects', projectsTitle: 'What is being built.', projectsIntro: 'The projects grow iteratively: solve a concrete problem first, then stabilise, connect and expand it step by step.',
+        statusLive: 'In use', statusDevelopment: 'In development', statusActive: 'Active development', botLabel: 'Discord · Guild management',
+        botCopy: 'The central Discord bot for recurring tasks: recruitment tickets, member profiles, guild data, absences and temporary voice channels are managed from one shared foundation.',
+        botDetail1: 'Recruitment with Armory and Warcraft Logs checks', botDetail2: 'Roster and attendance integration with Google Sheets', botDetail3: 'Join-to-create voice channels with personal settings', botDetail4: 'Independent web dashboard without bot restarts for design updates',
+        uiCopy: 'A modular interface that combines features from major UI addons in one consistent experience.', uiDetail1: 'Action bars, unit frames and nameplates', uiDetail2: 'Dark mode, bags, quick loot and Questie integration', uiDetail3: 'Global fonts, colours, textures and unlock mode',
+        bankLabel: 'Addon · Bot · Data flow', bankTitle: 'Guild Bank', bankCopy: 'An end-to-end workflow for withdrawals and administration: the in-game addon records activity, exports move into the sheet in a controlled way, and the Discord bot makes the data available to officers in the dashboard.', bankDetail1: 'Safe in-game capture and confirmed export', bankDetail2: 'Sheet import with unique transaction IDs', bankDetail3: 'Dashboard management inside the existing Guild Helper', auditable: 'Auditable',
+        toolsLabel: 'WoW Forever · Focused tools', toolsCopy: 'Individual building blocks are already available before the full interface: freely placeable data panels and a lightweight layer tracker in the shared FlowdiUI style.', toolsDetail1: 'Data panels with up to twelve assignable slots', toolsDetail2: 'Dark-mode menu and central unlock mode', toolsDetail3: 'Current layer and active-layer count for WoW Forever',
+        systemKicker: 'Connected system', systemTitle: 'More than isolated features.', systemIntro: 'The real advantage appears when the building blocks complement one another: data is maintained once and remains available to the right tools.', architectureTitle: 'One foundation.<br>Multiple surfaces.', architectureCopy: 'Discord handles communication and automation. The dashboard gives officers control. Addons bring the right tools directly into the game. Shared data flows keep everything connected.', mapAutomation: 'AUTOMATION & COMMUNICATION', mapControl: 'CONTROL FOR OFFICERS', mapSheets: 'ROSTER & REPORTING',
+        roadmapKicker: 'Development direction', roadmapTitle: 'Bringing it together, step by step.', roadmapIntro: 'Not every module is finished yet. The direction is clear: a dependable toolkit that can grow with a guild.', now: 'NOW', next: 'NEXT', parallel: 'IN PARALLEL', longTerm: 'LONG TERM', road1Title: 'Stable guild operations', road1Copy: 'Keep the bot, dashboard, recruitment, bank and voice features dependable in daily use.', road2Title: 'Deepen the roster', road2Copy: 'Continue automating and unifying profiles, raid attendance and role changes.', road3Title: 'Expand FlowdiUI', road3Copy: 'Complete the interface module by module and release selected features separately.', road4Title: 'One platform', road4Copy: 'Bring more guild functions under one surface without an unnecessary mix of providers.',
+        closingTitle: 'Built for guilds that would rather play than manage tools.', closingCopy: 'This site documents the development openly — from features already in use to the next building blocks of the connected system.', backTop: 'Back to top', openDetails: 'Open details', closeDetails: 'Close details', pageTitle: 'flowdi.dev — Tools for WoW Guilds', pageDescription: 'flowdi.dev builds WoW addons and Discord bots that bring guild management together in one connected toolkit.'
+      },
+      de: {
+        skip: 'Zum Inhalt', navAria: 'Hauptnavigation', langAria: 'Sprachauswahl', navIdea: 'Idee', navProjects: 'Projekte', navRoadmap: 'Ausblick',
+        heroEyebrow: 'Entwickelt für WoW-Gilden · im echten Einsatz', heroTitle: 'Werkzeuge für Gilden.<span>Ohne Tool-Zirkus.</span>',
+        heroCopy: 'Auf flowdi.dev entstehen Addons und Discord-Bots, die Gildenmanagement einfacher machen: Recruitment, Roster, Gildenbank, Sprachkanäle und Interface-Werkzeuge – verbunden gedacht, statt auf viele einzelne Anbieter und Premium-Pakete verteilt.',
+        viewProjects: 'Projekte ansehen', viewIdea: 'Die Idee dahinter', bankPipeline: 'Gildenbank Pipeline', systemStatus: 'modular aufgebaut · gemeinsam gedacht',
+        ideaKicker: 'Leitgedanke', ideaTitle: 'Weniger Dienste.<br>Mehr Zusammenhang.', ideaIntro: 'Gilden brauchen keine Sammlung isolierter Premium-Werkzeuge. Sie brauchen Funktionen, die miteinander sprechen und sich an den tatsächlichen Alltag anpassen.',
+        manifesto: 'Ein System für die Dinge, die Offiziere jeden Tag erledigen – <em>klar, erweiterbar und ohne unnötige Abhängigkeiten.</em>',
+        principle1Label: '01 / VERBUNDEN', principle1: 'Discord, Spiel und Gildendaten greifen ineinander.', principle2Label: '02 / MODULAR', principle2: 'Jede Gilde aktiviert nur, was sie wirklich braucht.', principle3Label: '03 / PRAXISNAH', principle3: 'Features entstehen aus dem echten Gildenbetrieb.',
+        projectsKicker: 'Aktuelle Projekte', projectsTitle: 'Was gerade entsteht.', projectsIntro: 'Die Projekte wachsen iterativ: erst ein konkretes Problem lösen, dann stabilisieren, verbinden und Schritt für Schritt erweitern.',
+        statusLive: 'Im Einsatz', statusDevelopment: 'In Entwicklung', statusActive: 'Aktiver Ausbau', botLabel: 'Discord · Gildenmanagement',
+        botCopy: 'Der zentrale Discord-Bot für wiederkehrende Aufgaben: Recruitment-Tickets, Mitgliederprofile, Gildendaten, Abwesenheiten und temporäre Sprachkanäle werden in einer gemeinsamen Basis verwaltet.',
+        botDetail1: 'Recruitment mit Armory- und Warcraft-Logs-Prüfung', botDetail2: 'Roster- und Attendance-Anbindung an Google Sheets', botDetail3: 'Join-to-Create-Sprachkanäle mit persönlichen Einstellungen', botDetail4: 'Eigenständiges Web-Dashboard, ohne Bot-Neustart bei Designänderungen',
+        uiCopy: 'Ein modulares Interface, das Funktionen großer UI-Addons in einer konsistenten Oberfläche bündelt.', uiDetail1: 'Action Bars, Unit Frames und Nameplates', uiDetail2: 'Darkmode, Bags, Quick Loot und Questie-Anbindung', uiDetail3: 'Globale Schriften, Farben, Texturen und Unlock-Modus',
+        bankLabel: 'Addon · Bot · Datenfluss', bankTitle: 'Gildenbank', bankCopy: 'Ein durchgängiger Workflow für Entnahmen und Verwaltung: Das Ingame-Addon sammelt Vorgänge, Exporte landen kontrolliert im Sheet und der Discord-Bot stellt die Daten für Offiziere im Dashboard bereit.', bankDetail1: 'Sichere Erfassung und bestätigter Export im Spiel', bankDetail2: 'Sheet-Import mit eindeutigen Vorgangs-IDs', bankDetail3: 'Dashboard-Verwaltung innerhalb des bestehenden Guild Helpers', auditable: 'Auditierbar',
+        toolsLabel: 'WoW Forever · Kleine Werkzeuge', toolsCopy: 'Einzelne Bausteine sind schon vor dem vollständigen Interface nutzbar: frei platzierbare Data Panels und ein schlanker Layer Tracker im gemeinsamen FlowdiUI-Stil.', toolsDetail1: 'Data Panels mit bis zu zwölf frei belegbaren Slots', toolsDetail2: 'Darkmode-Menü und zentraler Unlock-Modus', toolsDetail3: 'Layer-Anzeige inklusive aktiver Layer für WoW Forever',
+        systemKicker: 'Gemeinsames System', systemTitle: 'Nicht nur einzelne Features.', systemIntro: 'Der eigentliche Vorteil entsteht dort, wo sich die Bausteine ergänzen: Daten müssen nur einmal gepflegt werden und bleiben für die richtigen Werkzeuge verfügbar.', architectureTitle: 'Eine Basis.<br>Mehrere Oberflächen.', architectureCopy: 'Discord übernimmt Kommunikation und Automatisierung. Das Dashboard gibt Offizieren Kontrolle. Addons bringen die passenden Werkzeuge direkt ins Spiel. Gemeinsame Datenflüsse halten alles zusammen.', mapAutomation: 'AUTOMATION & KOMMUNIKATION', mapControl: 'STEUERUNG FÜR OFFIZIERE', mapSheets: 'ROSTER & AUSWERTUNG',
+        roadmapKicker: 'Entwicklungsrichtung', roadmapTitle: 'Schritt für Schritt zusammenführen.', roadmapIntro: 'Nicht jedes Modul ist schon fertig. Die Richtung ist aber klar: ein verlässlicher Werkzeugkasten, der mit einer Gilde mitwachsen kann.', now: 'JETZT', next: 'ALS NÄCHSTES', parallel: 'PARALLEL', longTerm: 'LANGFRISTIG', road1Title: 'Stabiler Gildenbetrieb', road1Copy: 'Bot, Dashboard, Recruitment, Bank und Voice-Funktionen zuverlässig im Alltag halten.', road2Title: 'Roster vertiefen', road2Copy: 'Profile, Raid Attendance und Rollenwechsel weiter automatisieren und vereinheitlichen.', road3Title: 'FlowdiUI ausbauen', road3Copy: 'Das Interface modular fertigstellen und ausgewählte Funktionen separat verfügbar machen.', road4Title: 'Eine Plattform', road4Copy: 'Mehr Gildenfunktionen unter einer Oberfläche zusammenbringen, ohne unnötigen Anbieter-Mix.',
+        closingTitle: 'Gebaut für Gilden, die lieber spielen als Tools verwalten.', closingCopy: 'Diese Seite dokumentiert die Entwicklung offen – von den bereits eingesetzten Funktionen bis zu den nächsten Bausteinen des gemeinsamen Systems.', backTop: 'Nach oben', openDetails: 'Details öffnen', closeDetails: 'Details schließen', pageTitle: 'flowdi.dev — Tools für WoW-Gilden', pageDescription: 'flowdi.dev entwickelt WoW-Addons und Discord-Bots, die Gildenmanagement an einem Ort zusammenführen.'
+      }
+    };
+
+    let currentLanguage = localStorage.getItem('flowdi-language') === 'de' ? 'de' : 'en';
+    const applyLanguage = (language) => {
+      currentLanguage = language;
+      const copy = translations[language];
+      document.documentElement.lang = language;
+      document.title = copy.pageTitle;
+      document.querySelector('meta[name="description"]').setAttribute('content', copy.pageDescription);
+      document.querySelectorAll('[data-i18n]').forEach((element) => { element.textContent = copy[element.dataset.i18n]; });
+      document.querySelectorAll('[data-i18n-html]').forEach((element) => { element.innerHTML = copy[element.dataset.i18nHtml]; });
+      document.querySelectorAll('[data-i18n-aria]').forEach((element) => { element.setAttribute('aria-label', copy[element.dataset.i18nAria]); });
+      document.querySelectorAll('[data-i18n-toggle]').forEach((button) => { button.textContent = button.getAttribute('aria-expanded') === 'true' ? copy.closeDetails : copy.openDetails; });
+      document.querySelectorAll('[data-lang]').forEach((button) => {
+        const active = button.dataset.lang === language;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      localStorage.setItem('flowdi-language', language);
+    };
+
+    document.querySelectorAll('[data-lang]').forEach((button) => button.addEventListener('click', () => applyLanguage(button.dataset.lang)));
+    applyLanguage(currentLanguage);
 
     document.querySelectorAll('.project-toggle').forEach((button) => {
       button.addEventListener('click', () => {
         const card = button.closest('.project');
         const open = card.classList.toggle('open');
         button.setAttribute('aria-expanded', String(open));
-        button.textContent = open ? 'Details schließen' : 'Details öffnen';
+        button.textContent = open ? translations[currentLanguage].closeDetails : translations[currentLanguage].openDetails;
       });
     });
 
