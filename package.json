@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node scripts/build-worker.mjs",
     "test": "node scripts/validate-artifact.mjs",
-    "check": "npm run build && npm test"
+    "audit": "node scripts/audit-source.mjs",
+    "check": "npm run audit && npm run build && npm test"
   },
   "engines": {
     "node": ">=20"
