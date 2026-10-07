@@ -40,7 +40,7 @@ npm test
 
 The Worker applies a restrictive Content Security Policy, blocks framing with both CSP and `X-Frame-Options`, enables HSTS, isolates the origin, disables unused browser permissions and rejects unsupported HTTP methods.
 
-Security behavior is tested by `scripts/validate-artifact.mjs`. Please see [SECURITY.md](SECURITY.md) for reporting guidance once that policy is added.
+Security behavior is tested by `scripts/validate-artifact.mjs`. Please see [SECURITY.md](SECURITY.md) for reporting guidance.
 
 ## Deployment
 
