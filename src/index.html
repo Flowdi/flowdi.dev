@@ -469,10 +469,10 @@
         <a href="#projekte" data-i18n="navProjects">Projects</a>
         <a href="#system">System</a>
         <a href="#ausblick" data-i18n="navRoadmap">Roadmap</a>
-        <div class="lang-switch" aria-label="Language selection" data-i18n-aria="langAria">
-          <button type="button" data-lang="de" aria-label="Auf Deutsch wechseln">DE</button>
+        <div class="lang-switch" role="group" aria-label="Language selection" data-i18n-aria="langAria">
+          <button type="button" data-lang="de" lang="de" aria-label="Auf Deutsch wechseln">DE</button>
           <span class="lang-divider" aria-hidden="true">/</span>
-          <button type="button" data-lang="en" class="active" aria-label="Switch to English">EN</button>
+          <button type="button" data-lang="en" lang="en" class="active" aria-label="Switch to English">EN</button>
         </div>
       </div>
     </nav>
@@ -490,7 +490,7 @@
         </div>
       </div>
 
-      <aside class="system-card reveal" aria-label="Übersicht des Guild-Tools-Systems">
+      <aside class="system-card reveal" aria-label="Guild tools system overview" data-i18n-aria="systemOverviewAria">
         <div class="window-bar"><span>guild-stack.config</span><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="system-body">
           <div class="flow-node"><span class="node-index">01</span><strong>Discord Guild Helper</strong><small>recruitment · roster · voice</small></div>
@@ -604,7 +604,7 @@
             <h3 data-i18n-rich="architectureTitle">One foundation.<br>Multiple surfaces.</h3>
             <p data-i18n="architectureCopy">Discord handles communication and automation. The dashboard gives officers control. Addons bring the right tools directly into the game. Shared data flows keep everything connected.</p>
           </div>
-          <div class="architecture-map" aria-label="Darstellung der Systemarchitektur">
+          <div class="architecture-map" aria-label="System architecture diagram" data-i18n-aria="architectureAria">
             <div class="map-row"><div class="map-box"><strong>WoW Addons</strong><small>IN-GAME WORKFLOWS</small></div><span class="map-line" aria-hidden="true"></span><div class="map-box"><strong>Discord Bot</strong><small data-i18n="mapAutomation">AUTOMATION & COMMUNICATION</small></div></div>
             <div class="map-box map-center"><strong>Guild Data Layer</strong><small>PROFILE · ROSTER · BANK · SETTINGS</small></div>
             <div class="map-row"><div class="map-box"><strong>Web Dashboard</strong><small data-i18n="mapControl">CONTROL FOR OFFICERS</small></div><span class="map-line" aria-hidden="true"></span><div class="map-box"><strong>Google Sheets</strong><small data-i18n="mapSheets">ROSTER & REPORTING</small></div></div>
@@ -649,7 +649,7 @@
 
     const translations = {
       en: {
-        skip: 'Skip to content', navAria: 'Main navigation', langAria: 'Language selection', navIdea: 'Vision', navProjects: 'Projects', navRoadmap: 'Roadmap',
+        skip: 'Skip to content', navAria: 'Main navigation', langAria: 'Language selection', switchGerman: 'Switch to German', switchEnglish: 'Switch to English', systemOverviewAria: 'Guild tools system overview', architectureAria: 'System architecture diagram', navIdea: 'Vision', navProjects: 'Projects', navRoadmap: 'Roadmap',
         heroEyebrow: 'Built for WoW guilds · proven in real use', heroTitle: ['Tools for guilds.', 'Without the tool sprawl.'],
         heroCopy: 'flowdi.dev builds addons and Discord bots that simplify guild management: recruitment, rosters, guild banks, voice channels and interface tools — designed to work together instead of being scattered across separate providers and premium plans.',
         viewProjects: 'View projects', viewIdea: 'The idea behind it', bankPipeline: 'Guild Bank Pipeline', systemStatus: 'modular by design · built to connect',
@@ -668,7 +668,7 @@
         closingTitle: 'Built for guilds that would rather play than manage tools.', closingCopy: 'This site documents the development openly — from features already in use to the next building blocks of the connected system.', backTop: 'Back to top', openDetails: 'Open details', closeDetails: 'Close details', pageTitle: 'flowdi.dev — Tools for WoW Guilds', pageDescription: 'flowdi.dev builds WoW addons and Discord bots that bring guild management together in one connected toolkit.'
       },
       de: {
-        skip: 'Zum Inhalt', navAria: 'Hauptnavigation', langAria: 'Sprachauswahl', navIdea: 'Idee', navProjects: 'Projekte', navRoadmap: 'Ausblick',
+        skip: 'Zum Inhalt', navAria: 'Hauptnavigation', langAria: 'Sprachauswahl', switchGerman: 'Zu Deutsch wechseln', switchEnglish: 'Zu Englisch wechseln', systemOverviewAria: 'Übersicht des Guild-Tools-Systems', architectureAria: 'Darstellung der Systemarchitektur', navIdea: 'Idee', navProjects: 'Projekte', navRoadmap: 'Ausblick',
         heroEyebrow: 'Entwickelt für WoW-Gilden · im echten Einsatz', heroTitle: ['Werkzeuge für Gilden.', 'Ohne Tool-Zirkus.'],
         heroCopy: 'Auf flowdi.dev entstehen Addons und Discord-Bots, die Gildenmanagement einfacher machen: Recruitment, Roster, Gildenbank, Sprachkanäle und Interface-Werkzeuge – verbunden gedacht, statt auf viele einzelne Anbieter und Premium-Pakete verteilt.',
         viewProjects: 'Projekte ansehen', viewIdea: 'Die Idee dahinter', bankPipeline: 'Gildenbank Pipeline', systemStatus: 'modular aufgebaut · gemeinsam gedacht',
@@ -728,6 +728,7 @@
         const active = button.dataset.lang === language;
         button.classList.toggle('active', active);
         button.setAttribute('aria-pressed', String(active));
+        button.setAttribute('aria-label', button.dataset.lang === 'de' ? copy.switchGerman : copy.switchEnglish);
       });
       localStorage.setItem('flowdi-language', language);
     };
@@ -766,7 +767,12 @@
       const navObserver = new IntersectionObserver((entries) => {
         const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
         if (!visible) return;
-        sectionLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === '#' + visible.target.id));
+        sectionLinks.forEach((link) => {
+          const active = link.getAttribute('href') === '#' + visible.target.id;
+          link.classList.toggle('active', active);
+          if (active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        });
       }, { rootMargin: '-25% 0px -60% 0px', threshold: [0, .1, .5] });
       observedSections.forEach((section) => navObserver.observe(section));
     }
