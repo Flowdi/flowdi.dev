@@ -48,6 +48,17 @@ const methodResponse = await worker.fetch(new Request("https://flowdi.dev/", { m
 assert.equal(methodResponse.status, 405);
 assert.equal(methodResponse.headers.get("allow"), "GET, HEAD");
 
+const robotsResponse = await worker.fetch(new Request("https://flowdi.dev/robots.txt"));
+assert.equal(robotsResponse.status, 200);
+assert.match(robotsResponse.headers.get("content-type") ?? "", /^text\/plain/);
+assert.match(await robotsResponse.text(), /Sitemap: https:\/\/flowdi\.dev\/sitemap\.xml/);
+
+const sitemapResponse = await worker.fetch(new Request("https://flowdi.dev/sitemap.xml"));
+assert.equal(sitemapResponse.status, 200);
+assert.match(sitemapResponse.headers.get("content-type") ?? "", /^application\/xml/);
+assert.match(await sitemapResponse.text(), /<loc>https:\/\/flowdi\.dev\/<\/loc>/);
+assert.equal(sitemapResponse.headers.get("x-content-type-options"), "nosniff");
+
 const missingResponse = await worker.fetch(new Request("https://flowdi.dev/missing"));
 assert.equal(missingResponse.status, 404);
 assert.equal(missingResponse.headers.get("x-frame-options"), "DENY");
@@ -56,4 +67,4 @@ const fallbackResponse = await worker.fetch(new Request("https://flowdi.flowditv
 assert.equal(fallbackResponse.status, 308);
 assert.equal(fallbackResponse.headers.get("location"), "https://flowdi.dev/");
 
-console.log("Security headers, anti-framing policy, routing and page output validated.");
+console.log("Security headers, anti-framing policy, discovery routes and page output validated.");

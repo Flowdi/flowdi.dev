@@ -46,7 +46,16 @@ const contentSecurityPolicy = [
   "upgrade-insecure-requests",
 ].join("; ");
 
+const robots = "User-agent: *\nAllow: /\nSitemap: https://flowdi.dev/sitemap.xml\n";
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://flowdi.dev/</loc></url>
+</urlset>
+`;
+
 const workerSource = `const page = ${JSON.stringify(page)};
+const robots = ${JSON.stringify(robots)};
+const sitemap = ${JSON.stringify(sitemap)};
 
 const securityHeaders = Object.freeze(${JSON.stringify({
   "Content-Security-Policy": contentSecurityPolicy,
@@ -83,6 +92,26 @@ export default {
       return secureResponse("Method not allowed", {
         status: 405,
         headers: { "allow": "GET, HEAD", "content-type": "text/plain; charset=utf-8" },
+      });
+    }
+
+    if (url.pathname === "/robots.txt") {
+      return secureResponse(request.method === "HEAD" ? null : robots, {
+        status: 200,
+        headers: {
+          "cache-control": "public, max-age=86400",
+          "content-type": "text/plain; charset=utf-8",
+        },
+      });
+    }
+
+    if (url.pathname === "/sitemap.xml") {
+      return secureResponse(request.method === "HEAD" ? null : sitemap, {
+        status: 200,
+        headers: {
+          "cache-control": "public, max-age=86400",
+          "content-type": "application/xml; charset=utf-8",
+        },
       });
     }
 
