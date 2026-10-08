@@ -6,6 +6,16 @@
   <meta name="theme-color" content="#0a0b0c">
   <meta name="description" content="flowdi.dev builds WoW addons and Discord bots that bring guild management together in one connected toolkit.">
   <meta name="referrer" content="no-referrer">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://flowdi.dev/">
+  <meta property="og:site_name" content="flowdi.dev">
+  <meta property="og:title" content="flowdi.dev — Tools for WoW Guilds">
+  <meta property="og:description" content="flowdi.dev builds WoW addons and Discord bots that bring guild management together in one connected toolkit.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="flowdi.dev — Tools for WoW Guilds">
+  <meta name="twitter:description" content="flowdi.dev builds WoW addons and Discord bots that bring guild management together in one connected toolkit.">
   <title>flowdi.dev — Tools for WoW Guilds</title>
   <link rel="canonical" href="https://flowdi.dev/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0b0c'/%3E%3Cpath d='M17 15h32v9H27v8h18v9H27v17H17z' fill='%23ff6b2c'/%3E%3C/svg%3E">
@@ -703,6 +713,11 @@
       document.documentElement.lang = language;
       document.title = copy.pageTitle;
       document.querySelector('meta[name="description"]').setAttribute('content', copy.pageDescription);
+      document.querySelector('meta[property="og:title"]').setAttribute('content', copy.pageTitle);
+      document.querySelector('meta[property="og:description"]').setAttribute('content', copy.pageDescription);
+      document.querySelector('meta[property="og:locale"]').setAttribute('content', language === 'de' ? 'de_DE' : 'en_US');
+      document.querySelector('meta[name="twitter:title"]').setAttribute('content', copy.pageTitle);
+      document.querySelector('meta[name="twitter:description"]').setAttribute('content', copy.pageDescription);
       document.querySelectorAll('[data-i18n]').forEach((element) => { element.textContent = copy[element.dataset.i18n]; });
       document.querySelectorAll('[data-i18n-rich]').forEach((element) => {
         richTextRenderers[element.dataset.i18nRich](element, copy[element.dataset.i18nRich]);
